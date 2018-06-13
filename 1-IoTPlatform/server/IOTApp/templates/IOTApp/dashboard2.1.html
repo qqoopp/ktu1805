@@ -1,0 +1,49 @@
+{% extends "IOTApp/base.html" %}
+{% block content %}
+<style type="text/css">
+    table {
+        border:none;
+    }
+    tr {
+        height:200;
+    }
+    td {  
+        padding:1px; 
+    }
+    
+    img {  
+        border:0;
+        padding:0px; 
+        height:200;
+        width:100%; 
+    }
+    iframe {  
+        border:none; 
+        width:100%;    
+        height:200;
+    }
+</style>
+<script>
+    function onload(){
+        var w = window.innerWidth;
+        var h = window.innerHeight; 
+    }
+</script>
+<body onload="onload()"></body>
+
+<br><br><br>
+<table id="tb">
+    <tr>
+        <td width="50%"><iframe id="chart" src="chart_org" scrolling="no"></iframe></td>
+        <td width="50%"><iframe id="chart" src="chart_sankey/device" scrolling="no"></iframe></td>
+    </tr>
+    <tr>
+        <td width="50%"><iframe id="chart" src="chart_guage/dht" scrolling="no"></iframe></td>        
+        <td width="50%"><iframe id="chart" src="chart_scatter/dht" scrolling="no"></iframe></td>
+    </tr>
+    <tr>
+        <td width="50%"><iframe id="chart" src="chart_table/dht" scrolling="no"></iframe></td>
+        <td width="50%"><iframe id="chart" src="chart_line/dht" scrolling="no"></iframe></td>
+    </tr>    
+</table>
+{% endblock %}

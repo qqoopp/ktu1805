@@ -1,0 +1,62 @@
+{% extends "IOTApp/base_item.html" %}
+{% block content %}
+<script>
+    var refrsshtime=100000
+    var timeout = setTimeout("location.reload(true);",refrsshtime); //refresh every 10sec
+    function resetTimeout() { clearTimeout(timeout); }
+</script>
+
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['sankey']});
+  google.charts.setOnLoadCallback(drawChart);
+  // setInterval(drawChart, 1000);
+
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+
+    var rtnarr = [[]]
+    var arr = []
+    i = 0
+    
+    data.addColumn('string', 'PDeviceSeq');
+    data.addColumn('string', 'CDeviceSeq');
+    data.addColumn('number', 'Weight');
+
+    rtnarr.pop()    
+    "{% for sensord in sensordata %}"
+
+        rtnarr.push([String("{{sensord.PDeviceSeq.DeviceNo}}"), String("{{sensord.CDeviceSeq.DeviceNo}}").toString(), 1])
+
+    "{% endfor %}"      
+
+    data.addRows(
+        rtnarr
+    );           
+
+    // data.addRows([
+    //   [ 'A', 'X', 5 ],
+    //   [ 'A', 'Y', 7 ],
+    //   [ 'A', 'Z', 6 ],
+    //   [ 'B', 'X', 2 ],
+    //   [ 'B', 'Y', 9 ],
+    //   [ 'B', 'Z', 4 ],
+    //   [ 'X', 'K', 2 ],
+    //   [ 'Y', 'K', 2 ],
+    //   [ 'Y', 'L', 2 ],
+    //   [ 'Y', 'M', 2 ],
+    //   [ 'Z', 'M', 2 ],
+    //   [ 'Z', 'L', 5 ],
+    // ]); 
+
+    // Sets chart options.
+    var options = {
+    };
+
+    // Instantiates and draws our chart, passing in some options.
+    var chart = new google.visualization.Sankey(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+</script>
+
+
+{% endblock %}

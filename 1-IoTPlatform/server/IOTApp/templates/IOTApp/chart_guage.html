@@ -1,0 +1,57 @@
+{% extends "IOTApp/base_item.html" %}
+{% block content %}
+<script>
+    var refrsshtime=10000
+    var timeout = setTimeout("location.reload(true);",refrsshtime); //refresh every 10sec
+    function resetTimeout() { clearTimeout(timeout); }
+</script>
+
+<script>
+google.charts.load('current', {'packages':['gauge']});
+google.charts.setOnLoadCallback(drawChart);
+// setInterval(drawChart, 10000);
+
+function drawChart() {
+
+  var data = new google.visualization.DataTable();
+  var rtnarr = [[]]
+  var arr = []
+  i = 0
+
+  data.addColumn('string', 'Label');
+  data.addColumn('number', 'Value');
+  
+  rtnarr.pop() 
+  "{% for sensord in sensordata %}"
+    rowdata = ""
+    rowdata = JSON.parse("{{sensord.Value}}".replace(/&quot;/g,'"'))
+
+    arr = []
+    "{% for column in columns %}"
+    arr.push( ["{{column}}", rowdata["{{column}}"]])
+     "{% endfor %}"
+
+  "{% endfor %}"
+
+  rowdata = arr
+  data.addRows(
+    rowdata
+  );  
+
+  console.log(rtnarr)
+
+  var options = {
+    // width: 400, height: 120,
+    redFrom: 30, redTo: 100,
+    yellowFrom:25, yellowTo: 30,
+    minorTicks: 5
+  };
+
+  var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+
+  chart.draw(data, options);
+
+}
+</script>
+
+{% endblock %}

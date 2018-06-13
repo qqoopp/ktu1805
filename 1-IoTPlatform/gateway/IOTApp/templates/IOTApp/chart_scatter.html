@@ -1,0 +1,60 @@
+{% extends "IOTApp/base_item.html" %}
+{% block content %}
+<script>
+    var refrsshtime=100000
+    var timeout = setTimeout("location.reload(true);",refrsshtime); //refresh every 10sec
+    function resetTimeout() { clearTimeout(timeout); }
+</script>
+
+<script type="text/javascript">
+
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    // setInterval(drawChart, 1000);
+
+    function drawChart() {
+
+        var data = new google.visualization.DataTable();
+
+        var rtnarr = [[]]
+        var arr = []
+        i = 0
+
+        "{% for column in columns %}"
+            data.addColumn('number', "{{column}}"); //set columns & number of lines
+        "{% endfor %}"
+        
+        "{% for sensord in sensordata %}"
+            rowdata = ""
+            rowdata = JSON.parse("{{sensord.Value}}".replace(/&quot;/g,'"'))
+
+            arr = []
+            "{% for column in columns %}"
+                arr.push(rowdata["{{column}}"])
+            "{% endfor %}"
+            //rtnarr[i] = [ rowdata["measuredt"].substring(8,16)*1000,rowdata["Temperature"],rowdata["Humidity"] ];
+            
+            rtnarr[i] = arr
+            i += 1
+
+        "{% endfor %}"
+
+        data.addRows(
+            rtnarr
+        );
+
+    var options = {
+        title: '',
+        hAxis: {minValue: -20, maxValue: 100},
+        vAxis: {minValue: 0, maxValue: 100},
+        legend: 'none'
+    };
+
+    var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+
+    chart.draw(data, options);
+    }
+
+</script>
+
+{% endblock %}

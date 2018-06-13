@@ -1,0 +1,11 @@
+*.pyc
+*~
+__pycache__
+myvenv
+.DS_Store
+.vscode
+*.log
+node_modules
+package-lock.json
+*.exe
+*.com

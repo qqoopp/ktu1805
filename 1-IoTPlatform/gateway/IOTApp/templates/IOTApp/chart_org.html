@@ -1,0 +1,38 @@
+{% extends "IOTApp/base_item.html" %}
+{% block content %}
+<script>
+    var refrsshtime=100000
+    var timeout = setTimeout("location.reload(true);",refrsshtime); //refresh every 10sec
+    function resetTimeout() { clearTimeout(timeout); }
+</script>
+
+<script type="text/javascript">
+google.charts.load('current', {packages:["orgchart"]});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Child');
+    data.addColumn('string', 'Parent');
+    data.addColumn('string', 'ToolTip');
+
+    // For each orgchart box, provide the name, manager, and tooltip to show.
+    data.addRows([
+        ['Server','','Raspberry Pi'],
+        ['Gateway','Server','Raspberry Pi'],
+        ['Controller1', 'Gateway', 'Arduino'],
+        ['Controller2', 'Gateway', 'NodeMCU'],
+    ]);
+
+  var options = {
+      color:'lightgrey',
+  };
+    // Create the chart.
+    var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+    // Draw the chart, setting the allowHtml option to true for the tooltips.
+    // chart.draw(data, {allowHtml:true});
+    chart.draw(data, options);
+}
+</script>
+
+{% endblock %}

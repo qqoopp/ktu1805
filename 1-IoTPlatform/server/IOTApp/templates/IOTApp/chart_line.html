@@ -1,0 +1,65 @@
+{% extends "IOTApp/base_item.html" %}
+{% block content %}
+<script>
+    var refrsshtime=10000
+    var timeout = setTimeout("location.reload(true);",refrsshtime); //refresh every 10sec
+    function resetTimeout() { clearTimeout(timeout); }
+</script>
+
+<script>
+    google.charts.load('current', {'packages':['line']});
+    google.charts.setOnLoadCallback(drawChart);
+    // setInterval(drawChart, 10000);
+
+    function drawChart() {
+
+        var data = new google.visualization.DataTable();
+
+        data.addColumn('number', '');
+        "{% for column in columns %}"
+            data.addColumn('number', "{{column}}"); //set legends & number of lines
+        "{% endfor %}"
+
+        var rtnarr = [[]]
+        var arr = []
+        i = 0
+
+        "{% for sensord in sensordata %}"
+            rowdata = ""
+            rowdata = JSON.parse("{{sensord.Value}}".replace(/&quot;/g,'"'))
+
+            arr = []
+            arr.push(rowdata["measuredt"].substring(8,18)*1000)
+            "{% for column in columns %}"
+                arr.push(rowdata["{{column}}"])
+            "{% endfor %}"
+            //rtnarr[i] = [ rowdata["measuredt"].substring(8,16)*1000,rowdata["Temperature"],rowdata["Humidity"] ];
+            
+            rtnarr[i] = arr
+            i += 1
+
+        "{% endfor %}"
+
+        data.addRows(
+            rtnarr
+        //[1300,  Math.random()*1000, Math.random()*1000, Math.random()*1000],
+        );
+
+        var options = {
+            title: '',
+            subtitle:'',
+            fontSize:10,
+            // legend:{position: 'none'},
+            hAxis:{textStyle:{fontSize:10}},
+            vAxis:{textStyle:{fontSize:10}},
+    };
+
+    var formatter = new google.visualization.DateFormat({formatType: 'none'});
+    formatter.format(data, 1);
+
+    var chart = new google.charts.Line(document.getElementById('chart_div'));
+
+    chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+</script>
+{% endblock %}
